@@ -1,7 +1,8 @@
 let a;
 let b;
 let operator;
-let result;
+let result=0;
+let equal;
 
 const display=document.querySelector('.display');
 
@@ -48,7 +49,7 @@ numbers.forEach ((number) => {
                 display.textContent=`${display.textContent}${number.innerText}`;
             }
             b=Number(display.textContent);
-            console.log(b);
+            console.log("b is", b);
         } else if (operator===undefined) {
             if (display.textContent==="0") {
                 display.textContent=number.innerText;
@@ -56,12 +57,20 @@ numbers.forEach ((number) => {
                 display.textContent=`${display.textContent}${number.innerText}`;
             }
             a=Number(display.textContent);
-            console.log(a);
+            console.log("a is", a);
+        } else if (equal===true && b!==undefined) {
+            display.textContent='';
+            display.textContent=number.innerText;
+            a=Number(display.textContent);
+            console.log("a is", a);
+            operator=undefined;
+            b=undefined;
+            equal=false;
         } else {
             display.textContent='';
             display.textContent=number.innerText;
             b=Number(display.textContent);
-            console.log(b);
+            console.log("b is", b);
             //operator=undefined; 
 
 
@@ -80,22 +89,27 @@ dot.addEventListener('click', () => {
 const operators=document.querySelectorAll('.operators');
 operators.forEach((sign) => {
     sign.addEventListener('click', () => {
-        if (b!==undefined) {
+        if (b!==undefined && equal!==true) {
             result=Math.round(operate(operator, a, b)*1000)/1000;
-            console.log(result);
+            console.log("result is", result);
             display.textContent=result;
             a=result;
         }
         operator=sign.innerText;
         console.log(operator);
+        b=undefined;
     })
 });
 
 const equals=document.querySelector('.equals');
 equals.addEventListener('click', () => {
+    if (b!==undefined) {
     result=Math.round(operate(operator, a, b)*1000)/1000;
     display.textContent=result;
-    console.log(result);
+    a=result;
+    console.log("result is", result);
+    equal=true;
+    }
 });
 
 const ac=document.querySelector('.ac');
@@ -103,6 +117,6 @@ ac.addEventListener('click', () => {
     a=undefined;
     b=undefined;
     operator=undefined;
-    result=undefined;
+    result=0;
     display.textContent='0';
 })
