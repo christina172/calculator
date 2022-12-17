@@ -3,6 +3,8 @@ let b;
 let operator;
 let result;
 
+const display=document.querySelector('.display');
+
 const add = function(a, b) {
 	return a+b;
 };
@@ -17,9 +19,9 @@ const multiply = function(a, b) {
 
 const divide = function(a,b) {
     if (b===0) {
-        console.log("ERROR");
+        return "ERROR";
     } else {
-    return a/b;
+        return a/b;
     }
 };
 
@@ -34,8 +36,6 @@ const operate = function(operator, a, b) {
         return divide(a,b);
     }
 };
-
-const display=document.querySelector('.display');
 
 const numbers=document.querySelectorAll('.numbers');
 numbers.forEach ((number) => {
@@ -59,17 +59,14 @@ numbers.forEach ((number) => {
             console.log(a);
         } else {
             display.textContent='';
-            if (display.textContent==="0") {
-                display.textContent=number.innerText;
-            } else {
-                display.textContent=`${display.textContent}${number.innerText}`;
-            }
+            display.textContent=number.innerText;
             b=Number(display.textContent);
             console.log(b);
             //operator=undefined; 
 
 
         }
+        
     });
 });
 
@@ -84,7 +81,7 @@ const operators=document.querySelectorAll('.operators');
 operators.forEach((sign) => {
     sign.addEventListener('click', () => {
         if (b!==undefined) {
-            result=operate(operator, a, b);
+            result=Math.round(operate(operator, a, b)*1000)/1000;
             console.log(result);
             display.textContent=result;
             a=result;
@@ -96,7 +93,7 @@ operators.forEach((sign) => {
 
 const equals=document.querySelector('.equals');
 equals.addEventListener('click', () => {
-    result=operate(operator, a, b);
+    result=Math.round(operate(operator, a, b)*1000)/1000;
     display.textContent=result;
     console.log(result);
 });

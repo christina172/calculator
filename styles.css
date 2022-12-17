@@ -43,7 +43,7 @@ button {
 }
 
 .operators, .equals {
-    background-color: blanchedalmond;
+    background-color: hsl(36, 100%, 88%);
 }
 
 .clear {
@@ -54,3 +54,30 @@ button {
     grid-column: span 2;
 }
 
+.numbers:hover,
+.dot:hover {
+    background-color: hsl(350, 100%, 82%);
+}
+
+.operators:hover,
+.equals:hover {
+    background-color: hsl(36, 100%, 82%);
+}
+
+.clear:hover {
+    background-color:hsl(278, 100%, 82%);
+}
+
+.numbers:active,
+.dot:active {
+    background-color: hsl(350, 100%, 92%);
+}
+
+.operators:active,
+.equals:active {
+    background-color: hsl(36, 100%, 92%);
+}
+
+.clear:active {
+    background-color:hsl(278, 100%, 92%);
+}
