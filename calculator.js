@@ -41,8 +41,9 @@ const operate = function(operator, a, b) {
 const numbers=document.querySelectorAll('.numbers');
 numbers.forEach ((number) => {
     number.addEventListener('click', (e) => {
-
-        if (b===Number(display.textContent)) {
+            console.log("length", display.textContent.length);
+            console.log('indexOf(".")', display.textContent.indexOf("."))
+        if (b===Number(display.textContent) && ((display.textContent.length<=12 && display.textContent.indexOf(".")>0) || (display.textContent.length<=11 && display.textContent.indexOf(".")<0))) {
             if (display.textContent==="0") {
                 display.textContent=number.innerText;
             } else {
@@ -50,7 +51,7 @@ numbers.forEach ((number) => {
             }
             b=Number(display.textContent);
             console.log("b is", b);
-        } else if (operator===undefined) {
+        } else if (operator===undefined && ((display.textContent.length<=12 && display.textContent.indexOf(".")>0) || (display.textContent.length<=11 && display.textContent.indexOf(".")<0))) {
             if (display.textContent==="0") {
                 display.textContent=number.innerText;
             } else {
@@ -58,7 +59,7 @@ numbers.forEach ((number) => {
             }
             a=Number(display.textContent);
             console.log("a is", a);
-        } else if (equal===true && b!==undefined) {
+        } else if ((equal===true && b!==undefined) || display.textContent==="ERROR" || display.textContent==="Result too long") {
             display.textContent='';
             display.textContent=number.innerText;
             a=Number(display.textContent);
@@ -66,7 +67,7 @@ numbers.forEach ((number) => {
             operator=undefined;
             b=undefined;
             equal=false;
-        } else {
+        } else if (operator!==undefined) {
             display.textContent='';
             display.textContent=number.innerText;
             b=Number(display.textContent);
@@ -75,7 +76,6 @@ numbers.forEach ((number) => {
 
 
         }
-        
     });
 });
 
@@ -89,11 +89,18 @@ dot.addEventListener('click', () => {
 const operators=document.querySelectorAll('.operators');
 operators.forEach((sign) => {
     sign.addEventListener('click', () => {
-        if (b!==undefined && equal!==true) {
+        if (operate(operator, a, b) === "ERROR") {
+            result=operate(operator, a, b);
+            display.textContent=result;
+        } else if (b!==undefined && equal!==true) {
             result=Math.round(operate(operator, a, b)*1000)/1000;
             console.log("result is", result);
-            display.textContent=result;
-            a=result;
+            if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
+                display.textContent=result;
+                a=result;
+            } else {
+                display.textContent="Result too long";
+            }
         }
         operator=sign.innerText;
         console.log(operator);
@@ -103,12 +110,19 @@ operators.forEach((sign) => {
 
 const equals=document.querySelector('.equals');
 equals.addEventListener('click', () => {
-    if (b!==undefined) {
-    result=Math.round(operate(operator, a, b)*1000)/1000;
-    display.textContent=result;
-    a=result;
-    console.log("result is", result);
-    equal=true;
+    if (operate(operator, a, b) === "ERROR") {
+        result=operate(operator, a, b);
+        display.textContent=result;
+    } else if (b!==undefined) {
+        result=Math.round(operate(operator, a, b)*1000)/1000;
+        console.log("result is", result);
+        if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
+            display.textContent=result;
+            a=result;
+            equal=true;
+        } else {
+            display.textContent="Result too long";
+        }
     }
 });
 
