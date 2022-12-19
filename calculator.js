@@ -41,8 +41,6 @@ const operate = function(operator, a, b) {
 const numbers=document.querySelectorAll('.numbers');
 numbers.forEach ((number) => {
     number.addEventListener('click', (e) => {
-            console.log("length", display.textContent.length);
-            console.log('indexOf(".")', display.textContent.indexOf("."))
         if (b===Number(display.textContent) && ((display.textContent.length<=12 && display.textContent.indexOf(".")>0) || (display.textContent.length<=11 && display.textContent.indexOf(".")<0))) {
             if (display.textContent==="0") {
                 display.textContent=number.innerText;
@@ -72,34 +70,52 @@ numbers.forEach ((number) => {
             display.textContent=number.innerText;
             b=Number(display.textContent);
             console.log("b is", b);
-            //operator=undefined; 
-
-
         }
     });
 });
 
 const dot=document.querySelector('.dot');
 dot.addEventListener('click', () => {
-    if (display.textContent.indexOf(".")<0) {
-    display.textContent=`${display.textContent}${dot.innerText}`;
+    if (display.textContent.indexOf(".")<0 || result==display.textContent) {
+        if ((equal===true && b!==undefined) || display.textContent==="ERROR" || display.textContent==="Result too long") {
+            display.textContent='';
+            display.textContent="0.";
+            a=Number(display.textContent);
+            console.log("a is", a);
+            operator=undefined;
+            b=undefined;
+            equal=false;
+        } else if (operator!==undefined && b!==Number(display.textContent)) {
+            display.textContent='';
+            display.textContent="0.";
+            b=Number(display.textContent);
+            console.log("b is", b);
+        } else {
+            display.textContent=`${display.textContent}${dot.innerText}`;
+        }
     }
 });
 
 const operators=document.querySelectorAll('.operators');
 operators.forEach((sign) => {
     sign.addEventListener('click', () => {
+        if (a==undefined) {
+            a=0;
+            console.log("a is", a);
+        }
         if (operate(operator, a, b) === "ERROR") {
             result=operate(operator, a, b);
             display.textContent=result;
+            console.log("ERROR");
         } else if (b!==undefined && equal!==true) {
             result=Math.round(operate(operator, a, b)*1000)/1000;
-            console.log("result is", result);
             if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
                 display.textContent=result;
                 a=result;
+                console.log("Result (and a) is", result, "(operator button pressed)");
             } else {
                 display.textContent="Result too long";
+                console.log("Result is too long (calculated by operator (+,-,*,/))");
             }
         }
         operator=sign.innerText;
@@ -113,15 +129,17 @@ equals.addEventListener('click', () => {
     if (operate(operator, a, b) === "ERROR") {
         result=operate(operator, a, b);
         display.textContent=result;
+        console.log("ERROR");
     } else if (b!==undefined) {
         result=Math.round(operate(operator, a, b)*1000)/1000;
-        console.log("result is", result);
         if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
             display.textContent=result;
             a=result;
             equal=true;
+            console.log("Result (and a) is", result, "(= button pressed)");
         } else {
             display.textContent="Result too long";
+            console.log("Result is too long (calculated by equals (=))")
         }
     }
 });
@@ -133,4 +151,30 @@ ac.addEventListener('click', () => {
     operator=undefined;
     result=0;
     display.textContent='0';
-})
+    console.log("All cleared");
+});
+
+const backspace=document.querySelector(".backspace");
+backspace.addEventListener('click', () => {
+    if (a==display.textContent && display.textContent!=0 && a!=result) {
+        if (display.textContent.length==1) {
+            display.textContent="0";
+            a=0;
+            console.log("backspace, a is", a);
+        } else {
+            display.textContent=display.textContent.slice(0, display.textContent.length-1);
+            a=Number(display.textContent);
+            console.log("backspace, a is", a);
+        }
+    } else if (b==display.textContent && display.textContent!=0) {
+        if (display.textContent.length==1) {
+            display.textContent="0";
+            b=0;
+            console.log("backspace, b is", b);
+        } else {
+            display.textContent=display.textContent.slice(0, display.textContent.length-1);
+            b=Number(display.textContent);
+            console.log("backspace, b is", b);
+        }
+    }
+});
