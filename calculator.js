@@ -70,6 +70,8 @@ numbers.forEach ((number) => {
             display.textContent=number.innerText;
             b=Number(display.textContent);
             console.log("b is", b);
+            //
+            equal=false;
         }
     });
 });
@@ -108,15 +110,23 @@ operators.forEach((sign) => {
             display.textContent=result;
             console.log("ERROR");
         } else if (b!==undefined && equal!==true) {
-            result=Math.round(operate(operator, a, b)*1000)/1000;
-            if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
+            result=operate(operator, a, b);
+            console.log("full result is", result, "(operator button pressed)");
+            if (result.toString().length > 12 && result.toString().indexOf(".")<12 && result.toString().indexOf(".")>0) {
+                let cut=result.toString().slice(0, 14);
+                console.log("cut number is", cut);
+                result=Number(Number(cut).toFixed(cut.length-result.toString().indexOf(".")-2));
+                display.textContent=result;
+                a=result;
+                console.log("Result (and a) is", result, "(operator button pressed, result rounded)");
+            } else if (result.toString().length > 12 && (result.toString().indexOf(".")<0 || result.toString().indexOf(".")>=12)) {
+                display.textContent="Result too long";
+                console.log("Result is too long (calculated by operator (+,-,*,/))");
+            } else {
                 display.textContent=result;
                 a=result;
                 console.log("Result (and a) is", result, "(operator button pressed)");
-            } else {
-                display.textContent="Result too long";
-                console.log("Result is too long (calculated by operator (+,-,*,/))");
-            }
+            };
         }
         operator=sign.innerText;
         console.log(operator);
@@ -131,15 +141,24 @@ equals.addEventListener('click', () => {
         display.textContent=result;
         console.log("ERROR");
     } else if (b!==undefined) {
-        result=Math.round(operate(operator, a, b)*1000)/1000;
-        if ((result.toString().length <= 12 && result.toString().indexOf(".")<0) || (result.toString().length <= 13 && result.toString().indexOf(".")>0)) {
+        result=operate(operator, a, b);
+        console.log("full result is", result, "(= button pressed)");
+        if (result.toString().length > 12 && result.toString().indexOf(".")<12 && result.toString().indexOf(".")>0) {
+            let cut=result.toString().slice(0, 14);
+            console.log("cut number is", cut);
+            result=Number(Number(cut).toFixed(cut.length-result.toString().indexOf(".")-2));
+            display.textContent=result;
+            a=result;
+            equal=true;
+            console.log("Result (and a) is", result, "(= button pressed, result rounded)");
+        } else if (result.toString().length > 12 && (result.toString().indexOf(".")<0 || result.toString().indexOf(".")>=12)) {
+            display.textContent="Result too long";
+            console.log("Result is too long (calculated by equals (=))");
+        } else {
             display.textContent=result;
             a=result;
             equal=true;
             console.log("Result (and a) is", result, "(= button pressed)");
-        } else {
-            display.textContent="Result too long";
-            console.log("Result is too long (calculated by equals (=))")
         }
     }
 });
